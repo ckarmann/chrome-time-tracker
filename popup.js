@@ -23,9 +23,15 @@
 
 		var table = "";
 		sortedKeys.forEach(function(key){
-			table += "<tr><td>" + key + "</td><td>" 
-			+ back.formatCount(countMap[key]) + "</td><td>"
-			+ formatPercent(countMap[key]/total) + "</td></tr>";
+			if (key == back.currentDomain) {
+				table += "<tr class='currentDomain'>"
+			}
+			else {
+				table += "<tr>"
+			}
+			table += "<td>" + key + "</td><td class='numeric'>" 
+				+ back.formatCount(countMap[key]) + "</td><td class='numeric'>"
+				+ formatPercent(countMap[key]/total) + "</td></tr>";
 		});
 		document.getElementById('timeTable').innerHTML = table;
 		document.getElementById('total').textContent = back.formatCount(total);
