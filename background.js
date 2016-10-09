@@ -6,6 +6,7 @@ countMap[""] = 0;
 var currentDomain = null;
 var currentTabId = -1;
 var currentDay = getToday();
+var categoryMap =  { "reddit.com": "bad", "stackoverflow.com": "good" };
 
 function extractDomain(url) {
 

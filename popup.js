@@ -23,12 +23,19 @@
 
 		var table = "";
 		sortedKeys.forEach(function(key){
+			var rowClass = [];
 			if (key == back.currentDomain) {
-				table += "<tr class='currentDomain'>"
+				rowClass.push("currentDomain");
 			}
-			else {
-				table += "<tr>"
+			var category = back.categoryMap[key];
+			if (category === "good") {
+				rowClass.push("good");
 			}
+			else if (category === "bad") {
+				rowClass.push("bad");
+			}
+
+			table += "<tr class='" + rowClass.join(" ") + "'>";
 			table += "<td>" + key + "</td><td class='numeric'>" 
 				+ back.formatCount(countMap[key]) + "</td><td class='numeric'>"
 				+ formatPercent(countMap[key]/total) + "</td></tr>";
