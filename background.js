@@ -115,7 +115,10 @@ function updateIcon() {
 }
 
 function saveCategory(domain) {
-	// TODO
+	var key = "category#" + domain;
+	var update = {};
+	update[key] = categoryMap[domain];
+	chrome.storage.local.set(update);
 }
 
 function advanceCategory(domain) {
