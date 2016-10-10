@@ -79,6 +79,9 @@ function loadData() {
 					countMap[key.substring(6)] = value.val;
 				}
 			}
+			else if (key.startsWith("category#")) {
+				categoryMap[key.substring(9)] = items[key];
+			}
 		});
 	});
 }
@@ -109,6 +112,24 @@ function updateIcon() {
 		chrome.browserAction.setBadgeBackgroundColor({color:[63, 63, 127, 230]});
 		chrome.browserAction.setBadgeText({text:formatCount(countMap[currentDomain])});
 	}
+}
+
+function saveCategory(domain) {
+	// TODO
+}
+
+function advanceCategory(domain) {
+	var currentCategory = categoryMap[domain];
+	if (currentCategory == "good") {
+		categoryMap[domain] = "bad";
+	}
+	else if (currentCategory == "bad") {
+		categoryMap[domain] = "";
+	}
+	else {
+		categoryMap[domain] = "good";
+	}
+	saveCategory(domain);
 }
 
 setInterval(update, 1000);
