@@ -32,10 +32,10 @@
       tr.currentDomain {
         font-weight: bold;
       }
-      tr.good {
+      .good {
         color: green;
       }
-      tr.bad {
+      .bad {
         color: red;
       }
     </style>
@@ -49,8 +49,14 @@
     <script src="popup.js"></script>
   </head>
   <body>
-  <div id="status"></div>
-  <div id="total"></div>
+    <div id="status"></div>
+    <div id="total"></div>
+    <div id="summary">
+      <ul>
+        <li class="good">Good: <span id="goodTotal"></span></li>
+        <li class="bad">Bad: <span id="badTotal"></span></li>
+      </ul>
+    </div>
     <div>
     	<table id="timeTable">
     		

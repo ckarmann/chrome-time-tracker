@@ -21,6 +21,7 @@
 		back.advanceCategory(domain);
 		var newClass = getRowClass(back.categoryMap[domain], domain == back.currentDomain);
 		button.closest("tr").className = newClass;
+		updateSummary();
 	}
 
 	function bootstrap() {
@@ -29,10 +30,32 @@
 
 		document.getElementById('timeTable').addEventListener("click", function(event){
 			var target = event.target;
-			if (target.className = 'categorizeButton') {
+			if (target.className == 'categorizeButton') {
 				categorizeClick(target);
 			}
 		});
+	}
+
+	function updateSummary() {
+		var back = chrome.extension.getBackgroundPage();
+		var countMap = back.countMap;
+		var categoryMap = back.categoryMap;
+
+		var goodTotal = 0;
+		var badTotal = 0;
+		var grandTotal = 0;
+		Object.keys(countMap).forEach(function(key){
+			if (categoryMap[key] == "good") {
+				goodTotal += countMap[key];
+			}
+			else if (categoryMap[key] == "bad") {
+				badTotal += countMap[key];
+			}
+			grandTotal += countMap[key];
+		});
+
+		document.getElementById("goodTotal").textContent = back.formatCount(goodTotal) + " (" + formatPercent(goodTotal/grandTotal) + ")";
+		document.getElementById("badTotal").textContent = back.formatCount(badTotal) + " (" + formatPercent(badTotal/grandTotal) + ")";
 	}
 
 	function formatPercent(number) {
@@ -64,6 +87,8 @@
 		});
 		document.getElementById('timeTable').innerHTML = table;
 		document.getElementById('total').textContent = back.formatCount(total);
+
+		updateSummary();
 	}
 
 	document.addEventListener('DOMContentLoaded', function() {
