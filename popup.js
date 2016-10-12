@@ -82,7 +82,7 @@
 				+ "<td>" + key + "</td>" 
 				+ "<td class='numeric'>" + back.formatCount(countMap[key]) + "</td>" 
 				+ "<td class='numeric'>" + formatPercent(countMap[key]/total) + "</td>"
-				+ "<td class='categorize'><button class='categorizeButton' data-domain='" + key + "'>X</button></td>" 
+				+ "<td class='categorize'><button class='categorizeButton' data-domain='" + key + "'></button></td>" 
 				+ "</tr>";
 		});
 		document.getElementById('timeTable').innerHTML = table;
