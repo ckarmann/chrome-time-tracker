@@ -109,7 +109,15 @@ function updateIcon() {
 		chrome.browserAction.setBadgeText({text:""});
 	}
 	else {
-		chrome.browserAction.setBadgeBackgroundColor({color:[63, 63, 127, 230]});
+		var category = categoryMap[currentDomain];
+		var color = [63, 63, 127, 230];
+		if (category === "good") {
+			color = "green";
+		}
+		else if (category === "bad") {
+			color = "red";
+		}
+		chrome.browserAction.setBadgeBackgroundColor({color: color});
 		chrome.browserAction.setBadgeText({text:formatCount(countMap[currentDomain])});
 	}
 }
