@@ -26,7 +26,7 @@
 
 	function bootstrap() {
 		console.log("bootstrap");
-		document.getElementById('status').textContent = new Date().toString();
+		// document.getElementById('status').textContent = new Date().toString();
 
 		document.getElementById('timeTable').addEventListener("click", function(event){
 			var target = event.target;
@@ -86,7 +86,7 @@
 				+ "</tr>";
 		});
 		document.getElementById('timeTable').innerHTML = table;
-		document.getElementById('total').textContent = back.formatCount(total);
+		//document.getElementById('total').textContent = back.formatCount(total);
 
 		updateSummary();
 	}
