@@ -28,6 +28,7 @@
 		console.log("bootstrap");
 		// document.getElementById('status').textContent = new Date().toString();
 
+		// listener for categorizing buttons
 		document.getElementById('timeTable').addEventListener("click", function(event){
 			var target = event.target;
 			if (target.className == 'categorizeButton') {
@@ -76,17 +77,34 @@
 
 		var table = "";
 		sortedKeys.forEach(function(key){
+
 			var rowClass = getRowClass(back.categoryMap[key], key == back.currentDomain);
 
 			table += "<tr class='" + rowClass + "'>" 
-				+ "<td>" + key + "</td>" 
+				+ "<td id='domain_" + key + "'>" + key + "</td>" 
 				+ "<td class='numeric'>" + back.formatCount(countMap[key]) + "</td>" 
 				+ "<td class='numeric'>" + formatPercent(countMap[key]/total) + "</td>"
 				+ "<td class='categorize'><button class='categorizeButton' data-domain='" + key + "'></button></td>" 
 				+ "</tr>";
+
 		});
 		document.getElementById('timeTable').innerHTML = table;
-		//document.getElementById('total').textContent = back.formatCount(total);
+
+		sortedKeys.forEach(function(key) {
+			chrome.history.search({text:key, maxResults:3}, function(results){
+				var history = [];
+				for (i = 0; i<results.length;i++) {
+					var title = results[i].title;
+					if (title) {
+						history.push(results[i].title);
+					}
+					else {
+						history.push(results[i].url);
+					}
+				}
+				document.getElementById("domain_" + key).setAttribute('title', history.join("\n"));
+			});
+		});
 
 		updateSummary();
 	}
