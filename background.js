@@ -8,6 +8,7 @@ var currentTabId = -1;
 var currentDay = getToday();
 var categoryMap =  { "reddit.com": "bad", "stackoverflow.com": "good" };
 
+// get domain for URL.
 function extractDomain(url) {
 
 	if (!url.startsWith("http")) {
@@ -35,6 +36,7 @@ function extractDomain(url) {
 }
 
 
+// called every second to update the time and the icon.
 function update() {
 	var day = getToday();
 	if (day != currentDay) {
@@ -53,6 +55,7 @@ function update() {
 	});
 }
 
+// save the updated time in local storage.
 function saveUpdate() {
 	if (currentDomain != null) {
 		var key = "count#" + currentDomain;
@@ -63,12 +66,13 @@ function saveUpdate() {
 	}
 }
 
+// get current date as an integer of the form 20161016 (for 2016, october 16).
 function getToday() {
 	var date = new Date();
-
 	return date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
 }
 
+// load current statistics at startup.
 function loadData() {
 	var today = getToday();
 	chrome.storage.local.get(null, function(items){
@@ -88,9 +92,8 @@ function loadData() {
 
 loadData();
 
-// TODO: 
-// - handle subdomain?
 
+// format number of seconds into a minutes:seconds string.
 function formatCount(seconds) {
 
 	//var hours = Math.floor(seconds / 3600);
@@ -103,6 +106,8 @@ function formatCount(seconds) {
 	return minutes + ":" + sec;
 }
 
+
+// display the icon (acutally its badge)
 function updateIcon() {
 	if (currentDomain == null) {
 		chrome.browserAction.setBadgeBackgroundColor({color:[127, 127, 127, 230]});
@@ -122,6 +127,8 @@ function updateIcon() {
 	}
 }
 
+
+// save category of the domain in local storage.
 function saveCategory(domain) {
 	var key = "category#" + domain;
 	var update = {};
@@ -129,6 +136,8 @@ function saveCategory(domain) {
 	chrome.storage.local.set(update);
 }
 
+
+// change category of a domain.
 function advanceCategory(domain) {
 	var currentCategory = categoryMap[domain];
 	if (currentCategory == "good") {
@@ -143,10 +152,10 @@ function advanceCategory(domain) {
 	saveCategory(domain);
 }
 
+// call update every second.
 setInterval(update, 1000);
 
-console.log("let's go");
-
+// called when the displayed URL has changed.
 function setCurrentUrl(url) {
 	var domain = extractDomain(url);
 	currentDomain = domain;
@@ -155,6 +164,7 @@ function setCurrentUrl(url) {
 	}	
 }
 
+// Listener to when a new tab is selected.
 chrome.tabs.onActivated.addListener(function(activeInfo) {
 	chrome.tabs.get(activeInfo.tabId, function(tab){
 		setCurrentUrl(tab.url);
@@ -163,6 +173,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 	updateIcon();
 });
 
+// Listener to when the website has changed on the current tab.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 	if (changeInfo.url != null) {
 		if (currentTabId == tabId) {
@@ -172,6 +183,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
 	}
 });
 
+// Listener to when a window has gained focus.
 chrome.windows.onFocusChanged.addListener(function(windowId) {
 	if (windowId > 0) {
 		chrome.tabs.query({windowId: windowId, active:true}, function(tabs) {

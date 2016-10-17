@@ -1,6 +1,7 @@
 
 (function() {
 
+	// commpute the class of the row element.
 	function getRowClass(category, isCurrentDomain) {
 		var rowClass = [];
 		if (isCurrentDomain) {
@@ -15,6 +16,7 @@
 		return rowClass.join(" ");
 	}
 
+	// handle click on category button.
 	function categorizeClick(button) {
 		var back = chrome.extension.getBackgroundPage();
 		var domain = button.dataset.domain;
@@ -24,9 +26,9 @@
 		updateSummary();
 	}
 
+	// bootstrap page.
 	function bootstrap() {
 		console.log("bootstrap");
-		// document.getElementById('status').textContent = new Date().toString();
 
 		// listener for categorizing buttons
 		document.getElementById('timeTable').addEventListener("click", function(event){
@@ -37,6 +39,7 @@
 		});
 	}
 
+	// update the summary of categories.
 	function updateSummary() {
 		var back = chrome.extension.getBackgroundPage();
 		var countMap = back.countMap;
@@ -59,10 +62,12 @@
 		document.getElementById("badTotal").textContent = back.formatCount(badTotal) + " (" + formatPercent(badTotal/grandTotal) + ")";
 	}
 
+	// handy tool to format a number into a percentage
 	function formatPercent(number) {
 		return (number * 100).toFixed(1) + "%";
 	}
 
+	// Display table and any other output.
 	function showTable() {
 		var back = chrome.extension.getBackgroundPage();
 		var countMap = back.countMap;
@@ -109,9 +114,9 @@
 		updateSummary();
 	}
 
+	// startup code.
 	document.addEventListener('DOMContentLoaded', function() {
 	  bootstrap();
-
 	  showTable();
 	});
 })();
