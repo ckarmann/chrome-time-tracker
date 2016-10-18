@@ -7,6 +7,7 @@ var currentDomain = null;
 var currentTabId = -1;
 var currentDay = getToday();
 var categoryMap =  { "reddit.com": "bad", "stackoverflow.com": "good" };
+var titleCache = {};
 
 // get domain for URL.
 function extractDomain(url) {

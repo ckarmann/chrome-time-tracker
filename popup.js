@@ -86,7 +86,7 @@
 			var rowClass = getRowClass(back.categoryMap[key], key == back.currentDomain);
 
 			table += "<tr class='" + rowClass + "'>" 
-				+ "<td id='domain_" + key + "'>" + key + "</td>" 
+				+ "<td id='domain_" + key + "' title='" + (back.titleCache[key] || "") + "'>" + key + "</td>" 
 				+ "<td class='numeric'>" + back.formatCount(countMap[key]) + "</td>" 
 				+ "<td class='numeric'>" + formatPercent(countMap[key]/total) + "</td>"
 				+ "<td class='categorize'><button class='categorizeButton' data-domain='" + key + "'></button></td>" 
@@ -107,7 +107,10 @@
 						history.push(results[i].url);
 					}
 				}
-				document.getElementById("domain_" + key).setAttribute('title', history.join("\n"));
+				var titleText = history.join("\n");
+				document.getElementById("domain_" + key).setAttribute('title', titleText);
+				back.titleCache[key] = titleText;
+				console.log(key +"=" + titleText)
 			});
 		});
 
