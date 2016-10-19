@@ -1,6 +1,5 @@
 
 
-var count = 0;
 var countMap = { };
 countMap[""] = 0;
 var currentDomain = null;
@@ -8,7 +7,7 @@ var currentTabId = -1;
 var currentDay = getToday();
 var categoryMap =  { "reddit.com": "bad", "stackoverflow.com": "good" };
 var titleCache = {};
-
+	
 // get domain for URL.
 function extractDomain(url) {
 
@@ -97,7 +96,6 @@ loadData();
 // format number of seconds into a minutes:seconds string.
 function formatCount(seconds) {
 
-	//var hours = Math.floor(seconds / 3600);
 	var minutes = Math.floor(seconds / 60);
 	var sec = seconds % 60;
 	if (sec < 10) {
@@ -111,7 +109,6 @@ function formatCount(seconds) {
 // display the icon (acutally its badge)
 function updateIcon() {
 	if (currentDomain == null) {
-		chrome.browserAction.setBadgeBackgroundColor({color:[127, 127, 127, 230]});
 		chrome.browserAction.setBadgeText({text:""});
 	}
 	else {
