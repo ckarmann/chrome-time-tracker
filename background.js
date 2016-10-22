@@ -2,6 +2,7 @@
 
 var countMap = { };
 countMap[""] = 0;
+var yesterdayMap = { };
 var currentDomain = null;
 var currentTabId = -1;
 var currentDay = getToday();
@@ -40,6 +41,7 @@ function extractDomain(url) {
 function update() {
 	var day = getToday();
 	if (day != currentDay) {
+		yesterdayMap = countMap;
 		countMap = {};
 		if (currentDomain != null) {
 			countMap[currentDomain] = 0;

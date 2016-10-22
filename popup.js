@@ -23,7 +23,8 @@
 		back.advanceCategory(domain);
 		var newClass = getRowClass(back.categoryMap[domain], domain == back.currentDomain);
 		button.closest("tr").className = newClass;
-		updateSummary();
+		updateSummary("today", back.countMap);
+		updateSummary("yesterday", back.yesterdayMap);
 	}
 
 	// bootstrap page.
@@ -31,18 +32,31 @@
 		console.log("bootstrap");
 
 		// listener for categorizing buttons
-		document.getElementById('timeTable').addEventListener("click", function(event){
-			var target = event.target;
-			if (target.className == 'categorizeButton') {
-				categorizeClick(target);
-			}
+		var tables = document.getElementsByClassName('timeTable');
+		for (i =0; i < tables.length; i++) {
+			var t = tables[i];
+			t.addEventListener("click", function(event){
+				var target = event.target;
+				console.log("click on " + target);
+				if (target.className == 'categorizeButton') {
+					categorizeClick(target);
+				}
+			});			
+		}
+
+		document.getElementById("yesterdayLink").addEventListener("click", function(){
+			document.getElementById("yesterdayTab").style.display = "block";
+			document.getElementById("todayTab").style.display = "none";
+		});
+		document.getElementById("todayLink").addEventListener("click", function(){
+			document.getElementById("yesterdayTab").style.display = "none";
+			document.getElementById("todayTab").style.display = "block";
 		});
 	}
 
 	// update the summary of categories.
-	function updateSummary() {
+	function updateSummary(dayName, countMap) {
 		var back = chrome.extension.getBackgroundPage();
-		var countMap = back.countMap;
 		var categoryMap = back.categoryMap;
 
 		var goodTotal = 0;
@@ -58,8 +72,9 @@
 			grandTotal += countMap[key];
 		});
 
-		document.getElementById("goodTotal").textContent = back.formatCount(goodTotal) + " (" + formatPercent(goodTotal/grandTotal) + ")";
-		document.getElementById("badTotal").textContent = back.formatCount(badTotal) + " (" + formatPercent(badTotal/grandTotal) + ")";
+		var tab = document.getElementById(dayName + "Tab")
+		tab.querySelector(".goodTotal").textContent = back.formatCount(goodTotal) + " (" + formatPercent(goodTotal/grandTotal) + ")";
+		tab.querySelector(".badTotal").textContent = back.formatCount(badTotal) + " (" + formatPercent(badTotal/grandTotal) + ")";
 	}
 
 	// handy tool to format a number into a percentage
@@ -67,10 +82,8 @@
 		return (number * 100).toFixed(1) + "%";
 	}
 
-	// Display table and any other output.
-	function showTable() {
-		var back = chrome.extension.getBackgroundPage();
-		var countMap = back.countMap;
+
+	function showDay(dayName, countMap, currentDomain, back) {
 		var sortedKeys = Object.keys(countMap).sort(function(a,b) { 
 			return countMap[b] - countMap[a]; 
 		});
@@ -83,17 +96,18 @@
 		var table = "";
 		sortedKeys.forEach(function(key){
 
-			var rowClass = getRowClass(back.categoryMap[key], key == back.currentDomain);
+			var rowClass = getRowClass(back.categoryMap[key], key == currentDomain);
 
 			table += "<tr class='" + rowClass + "'>" 
-				+ "<td id='domain_" + key + "' title='" + (back.titleCache[key] || "") + "'>" + key + "</td>" 
+				+ "<td id='domain_" + dayName + "_" + key + "' title='" + (back.titleCache[key] || "") + "'>" + key + "</td>" 
 				+ "<td class='numeric'>" + back.formatCount(countMap[key]) + "</td>" 
 				+ "<td class='numeric'>" + formatPercent(countMap[key]/total) + "</td>"
 				+ "<td class='categorize'><button class='categorizeButton' data-domain='" + key + "'></button></td>" 
 				+ "</tr>";
 
 		});
-		document.getElementById('timeTable').innerHTML = table;
+		var tab = document.getElementById(dayName + "Tab");
+		tab.querySelector('.timeTable').innerHTML = table;
 
 		sortedKeys.forEach(function(key) {
 			chrome.history.search({text:key, maxResults:3}, function(results){
@@ -108,13 +122,21 @@
 					}
 				}
 				var titleText = history.join("\n");
-				document.getElementById("domain_" + key).setAttribute('title', titleText);
+				document.getElementById("domain_" + dayName + "_" + key).setAttribute('title', titleText);
 				back.titleCache[key] = titleText;
-				console.log(key +"=" + titleText)
 			});
 		});
 
-		updateSummary();
+		updateSummary(dayName, countMap);		
+	}
+
+
+	// Display table and any other output.
+	function showTable() {
+		var back = chrome.extension.getBackgroundPage();
+		var countMap = back.countMap;
+		showDay("today", countMap, back.currentDomain, back);
+		showDay("yesterday", back.yesterdayMap, null, back);
 	}
 
 	// startup code.
