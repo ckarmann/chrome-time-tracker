@@ -45,12 +45,22 @@
 		}
 
 		document.getElementById("yesterdayLink").addEventListener("click", function(){
+			document.querySelectorAll(".yesterdaySelected").forEach(function(s) {
+				s.style.display = "inline";
+			});
 			document.getElementById("yesterdayTab").style.display = "block";
-			document.getElementById("todayTab").style.display = "none";
+			document.querySelectorAll(".todaySelected").forEach(function(s) {
+				s.style.display = "none";
+			});
 		});
 		document.getElementById("todayLink").addEventListener("click", function(){
-			document.getElementById("yesterdayTab").style.display = "none";
+			document.querySelectorAll(".todaySelected").forEach(function(s) {
+				s.style.display = "inline";
+			});
 			document.getElementById("todayTab").style.display = "block";
+			document.querySelectorAll(".yesterdaySelected").forEach(function(s) {
+				s.style.display = "none";
+			});
 		});
 	}
 

@@ -58,7 +58,7 @@
         margin: 0.4em 0;
         white-space: nowrap;
       }
-      #yesterdayTab {
+      .yesterdaySelected {
         display:none;
       }
     </style>
@@ -68,10 +68,12 @@
   <body>
     <h1>Wasting time tracker</h1>
     <div>
-    <a href="#" id="todayLink">Today</a>
-    <a href="#" id="yesterdayLink">Yesterday</a>
+    <span class="todaySelected">Today</span>
+    <a href="#" id="todayLink" class="yesterdaySelected">Today</a>
+    <span id="yesterdayLabel" class="yesterdaySelected">Yesterday</span>
+    <a href="#" id="yesterdayLink" class="todaySelected">Yesterday</a>
     </div>
-    <div id="todayTab">
+    <div id="todayTab" class="todaySelected">
       <div class="summary">
         <ul>
           <li class="good">Good: <span class="goodTotal"></span></li>
@@ -83,7 +85,7 @@
         </table>
       </div>
     </div>
-    <div id="yesterdayTab">
+    <div id="yesterdayTab" class="yesterdaySelected">
       <div class="summary">
         <ul>
           <li class="good">Good: <span class="goodTotal"></span></li>
